@@ -8,7 +8,11 @@ import { toUnmountPromise } from './lifecycles/unmount'
 import { MooaOption } from './model/MooaOption'
 import MooaRouter from './router'
 import { MooaPlatform } from './platform/platform'
-import { customEvent, navigateAppByName } from './helper/app.helper'
+import {
+  customEvent,
+  navigateAppByName,
+  rcNavigateAppByName
+} from './helper/app.helper'
 import { generateIFrameID } from './helper/dom.utils'
 
 declare const window: any
@@ -134,9 +138,29 @@ class Mooa {
         navigateAppByName(event.detail)
       }
     })
+
     return this.reRouter()
   }
 
+  rcStart(location?: any) {
+    this.started = true
+    window.addEventListener(MOOA_EVENT.ROUTING_NAVIGATE, function(
+      event: CustomEvent
+    ) {
+      if (event.detail) {
+        rcNavigateAppByName(event.detail)
+      }
+    })
+
+    return this.rcReRouter(location)
+  }
+
+  /**
+   * @desc
+   * eventArguments is used for ng2
+   * 在react中，监听的不是router event，而是history的改变,
+   * 当history改变时，会调用rerouter方法，并通知platform执行navigate方法
+   */
   reRouter(eventArguments?: any) {
     const that = this
     async function performAppChanges() {
@@ -178,6 +202,7 @@ class Mooa {
       await Promise.all(loadThenMountPromises.concat(mountPromises))
       if (eventArguments) {
         let activeApp = StatusHelper.getActiveApps(apps)[0]
+        console.log('active app', activeApp)
         if (activeApp && activeApp['appConfig']) {
           that.createRoutingChangeEvent(eventArguments, activeApp)
         }
@@ -185,6 +210,83 @@ class Mooa {
     }
 
     return performAppChanges()
+  }
+
+  rcReRouter(location?: any) {
+    const that = this
+
+    console.log('rcrerouter', apps)
+
+    async function performAppChanges() {
+      customEvent(MOOA_EVENT.ROUTING_BEFORE)
+      const unloadPromises = StatusHelper.getAppsToUnload().map(toUnloadPromise)
+
+      const unmountUnloadPromises = StatusHelper.getAppsToUnmount(
+        apps,
+        location
+      )
+        .map(toUnmountPromise)
+        .map((unmountPromise: any) => unmountPromise.then(toUnloadPromise))
+
+      const allUnmountPromises = unmountUnloadPromises.concat(unloadPromises)
+
+      const unmountAllPromise = Promise.all(allUnmountPromises)
+
+      const appsToLoad = StatusHelper.getAppsToLoad(apps, location)
+      const loadThenMountPromises = appsToLoad.map((app: any) => {
+        return toLoadPromise(app)
+          .then(toBootstrapPromise)
+          .then(async function(toMountApp) {
+            await unmountAllPromise
+            return toMountPromise(toMountApp)
+          })
+      })
+
+      const mountPromises = StatusHelper.getAppsToMount(apps, location)
+        .filter((appToMount: any) => appsToLoad.indexOf(appToMount) < 0)
+        .map(async function(appToMount: any) {
+          await toBootstrapPromise(appToMount)
+          await unmountAllPromise
+          return toMountPromise(appToMount)
+        })
+
+      try {
+        await unmountAllPromise
+      } catch (err) {
+        throw err
+      }
+
+      await Promise.all(loadThenMountPromises.concat(mountPromises))
+      if (location) {
+        let activeApp = StatusHelper.getActiveApps(apps)[0]
+        console.log('active app', activeApp)
+        if (activeApp && activeApp['appConfig']) {
+          that.rcCreateRoutingChangeEvent(location, activeApp)
+        }
+      }
+    }
+
+    return performAppChanges()
+  }
+
+  rcCreateRoutingChangeEvent(location: any, activeApp: any) {
+    let eventArgs = {
+      path: location.path,
+      app: activeApp['appConfig']
+    }
+
+    if (activeApp.mode === 'iframe') {
+      const iframeId = generateIFrameID(activeApp.name)
+      let iframeEl: any = document.getElementById(iframeId)
+      if (iframeEl && iframeEl.contentWindow) {
+        iframeEl.contentWindow.mooa.option = window.mooa.option
+        iframeEl.contentWindow.dispatchEvent(
+          new CustomEvent(MOOA_EVENT.ROUTING_CHANGE, { detail: eventArgs })
+        )
+      }
+    } else {
+      customEvent(MOOA_EVENT.ROUTING_CHANGE, eventArgs)
+    }
   }
 
   createRoutingChangeEvent(eventArguments: any, activeApp: any) {

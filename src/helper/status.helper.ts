@@ -9,12 +9,18 @@ function InActive(app: any) {
   return !isActive(app)
 }
 
-function shouldNotBeActive(app: any) {
-  try {
-    return !app.activeWhen(window.location)
-  } catch (err) {
-    app.status = StatusEnum.SKIP_BECAUSE_BROKEN
-    throw new Error(err)
+/**
+ * @todo
+ * location should be decided by history.location
+ */
+function shouldNotBeActive(location?: any) {
+  return function(app: any) {
+    try {
+      return !app.activeWhen(location || window.location)
+    } catch (err) {
+      app.status = StatusEnum.SKIP_BECAUSE_BROKEN
+      throw new Error(err)
+    }
   }
 }
 
@@ -36,21 +42,23 @@ function notLoaded(app: any) {
   return !isLoaded(app)
 }
 
-function shouldBeActive(app: any) {
-  try {
-    return app.activeWhen(window.location)
-  } catch (err) {
-    app.status = StatusEnum.SKIP_BECAUSE_BROKEN
-    throw new Error(err)
+function shouldBeActive(location?: any) {
+  return function(app: any) {
+    try {
+      return app.activeWhen(location || window.location)
+    } catch (err) {
+      app.status = StatusEnum.SKIP_BECAUSE_BROKEN
+      throw new Error(err)
+    }
   }
 }
 
 const StatusHelper = {
-  getAppsToLoad: (apps: any) => {
+  getAppsToLoad: (apps: any, location?: any) => {
     return apps
       .filter(notSkipped)
       .filter(notLoaded)
-      .filter(shouldBeActive)
+      .filter(shouldBeActive(location))
   },
   getAppsToUnload: () => {
     const appsToUnload = getUnloadApps()
@@ -62,18 +70,18 @@ const StatusHelper = {
     const appsToUnload = getUnloadApps()
     return appsToUnload[appName]
   },
-  getAppsToUnmount: (apps: any) => {
+  getAppsToUnmount: (apps: any, location?: any) => {
     return apps
       .filter(notSkipped)
       .filter(isActive)
-      .filter(shouldNotBeActive)
+      .filter(shouldNotBeActive(location))
   },
-  getAppsToMount: (apps: any) => {
+  getAppsToMount: (apps: any, location?: any) => {
     return apps
       .filter(notSkipped)
       .filter(InActive)
       .filter(isLoaded)
-      .filter(shouldBeActive)
+      .filter(shouldBeActive(location))
   },
   getActiveApps: (apps: any) => {
     return apps.filter(notSkipped).filter(isActive)
