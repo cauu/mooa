@@ -202,7 +202,6 @@ class Mooa {
       await Promise.all(loadThenMountPromises.concat(mountPromises))
       if (eventArguments) {
         let activeApp = StatusHelper.getActiveApps(apps)[0]
-        console.log('active app', activeApp)
         if (activeApp && activeApp['appConfig']) {
           that.createRoutingChangeEvent(eventArguments, activeApp)
         }
@@ -214,8 +213,6 @@ class Mooa {
 
   rcReRouter(location?: any) {
     const that = this
-
-    console.log('rcrerouter', apps)
 
     async function performAppChanges() {
       customEvent(MOOA_EVENT.ROUTING_BEFORE)
@@ -259,7 +256,6 @@ class Mooa {
       await Promise.all(loadThenMountPromises.concat(mountPromises))
       if (location) {
         let activeApp = StatusHelper.getActiveApps(apps)[0]
-        console.log('active app', activeApp)
         if (activeApp && activeApp['appConfig']) {
           that.rcCreateRoutingChangeEvent(location, activeApp)
         }

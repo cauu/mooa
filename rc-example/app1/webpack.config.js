@@ -9,7 +9,7 @@ const cleanPlugin = new CleanWebpackPlugin(['dist'], {
 });
 
 const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./src/index.html",
+  template: "src/index.html",
   filename: "index.html"
 });
 
@@ -19,6 +19,16 @@ const cssPlugin = new MiniCssExtractPlugin({
 });
 
 module.exports = {
+  entry: [
+    __dirname + '/src/index.tsx',
+  ],
+  output: {
+    path: __dirname + '/dist',
+    filename: 'main.js',
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
   module: {
     rules: [
       {
@@ -27,9 +37,24 @@ module.exports = {
         loader: "babel-loader"
       },
       {
+        test: /(\.ts|\.tsx)$/,
+        exclude: /node_modules/,
+        loader: "ts-loader"
+      },
+      {
         test: /\.html$/,
         loader: "html-loader",
         options: { minimize: true }
+      },
+      {
+        test: /\.(sass|scss)$/,
+        use: [{
+          loader: "style-loader"
+        }, {
+          loader: "css-loader"
+        }, {
+          loader: "sass-loader"
+        }]
       },
       {
         test: /\.css$/,
@@ -39,5 +64,3 @@ module.exports = {
   },
   plugins: [cleanPlugin, htmlPlugin, cssPlugin]
 };
-
-

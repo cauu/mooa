@@ -1,7 +1,9 @@
+import { isString } from 'lodash'
 import { hashCode, navigateAppByName } from './app.helper'
 import { MooaApp } from '../model/IAppOption'
 import { MOOA_EVENT } from '../model/constants'
 
+declare const window: any
 declare const Element: any
 declare const document: Document
 
@@ -15,7 +17,8 @@ export function createApplicationContainer(mooaApp: MooaApp) {
     }
   }
 
-  el = document.createElement(opts.selector)
+  // el = document.createElement(opts.selector)
+  el = createElement(opts.selector)
 
   if (opts.parentElement) {
     let parentEl = document.querySelector(opts.parentElement)
@@ -79,9 +82,8 @@ export function createApplicationIframeContainer(mooaApp: MooaApp) {
   iframe.src = window.location.origin + '/assets/iframe.html'
   iframe.id = generateIFrameID(mooaApp.appConfig.name)
 
-  console.log('createiframe', iframe)
-
-  const el = document.createElement(opts.selector)
+  // const el = document.createElement(opts.selector)
+  const el = createElement(opts.selector)
 
   if (opts.parentElement) {
     let parentEl = document.querySelector(opts.parentElement)
@@ -134,4 +136,52 @@ export function removeApplicationIframeContainer(app: MooaApp) {
 
 export function generateIFrameID(name: string) {
   return name + '_' + hashCode(name)
+}
+
+export function createElement(options: any) {
+  let el, a, i
+
+  if (isString(options)) {
+    return document.createElement(options)
+  }
+
+  if (!options.tagName) {
+    el = document.createDocumentFragment()
+  } else {
+    el = document.createElement(options.tagName)
+    if (options.className) {
+      el.className = options.className
+    }
+
+    if (options.attributes) {
+      for (a in options.attributes) {
+        el.setAttribute(a, options.attributes[a])
+      }
+    }
+
+    if (options.html !== undefined) {
+      el.innerHTML = options.html
+    }
+  }
+
+  if (options.text) {
+    el.appendChild(document.createTextNode(options.text))
+  }
+
+  // IE 8 doesn"t have HTMLElement
+  if (window.HTMLElement === undefined) {
+    window.HTMLElement = Element
+  }
+
+  if (options.childs && options.childs.length) {
+    for (i = 0; i < options.childs.length; i++) {
+      el.appendChild(
+        options.childs[i] instanceof window.HTMLElement
+          ? options.childs[i]
+          : createElement(options.childs[i])
+      )
+    }
+  }
+
+  return el
 }

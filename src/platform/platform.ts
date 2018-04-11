@@ -1,5 +1,6 @@
 import { customEvent } from '../helper/app.helper'
 import { MOOA_EVENT } from '../model/constants'
+import { mooaLog } from '../helper/app.helper'
 
 declare const window: any
 window.mooa = window.mooa || {}
@@ -38,9 +39,12 @@ export class MooaPlatform {
     }
   }
 
-  appBase(): string {
+  appBase(location?: any): string {
     if (this.isSingleSpaApp()) {
-      const pathNames = window.location.pathname.split('/')
+      location = location || window.location
+      const pathNames = location.pathname.split('/')
+      console.log(location)
+      console.log(`Is SPA, path is ${pathNames}`)
       if (pathNames.length < 2) {
         return '/'
       }

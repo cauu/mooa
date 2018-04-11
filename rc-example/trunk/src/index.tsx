@@ -11,13 +11,15 @@ import { default as Mooa, mooaRouter } from '../../../src/mooa';
 
 import Root from './root';
 
+import './styles/app.scss';
+
 declare const window: any;
 
 const history = createHashHistory();
 
 const mooa = new Mooa({
   mode: 'iframe',
-  debug: false,
+  debug: true,
   parentElement: '#app-home',
   urlPrefix: 'app',
   switchMode: 'coexist',
