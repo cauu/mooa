@@ -17,14 +17,7 @@ import Root from './root';
 
 const history = createHashHistory();
 
-console.log('child location is', history.location)
-
-history.listen((location: any) => {
-  console.log('location changed');
-  console.log(location);
-});
-
-mooaPlatform.mount('app1').then(() => {
+mooaPlatform.rcMount('app1', history).then((...params) => {
   render(
     <Router basename={mooaPlatform.appBase(history.location)}>
       <div>

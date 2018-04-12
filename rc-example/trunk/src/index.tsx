@@ -8,6 +8,7 @@ import { createHashHistory } from 'history';
 import axios from 'axios';
 
 import { default as Mooa, mooaRouter } from '../../../src/mooa';
+import { MOOA_EVENT } from '../../../src/model/constants';
 
 import Root from './root';
 
@@ -27,7 +28,7 @@ const mooa = new Mooa({
   includeZone: true
 });
 
-function mooaWithConfig() {
+function mooaWithConfig(history: any) {
   axios.get('/assets/apps.json')
     .then(({ data }) => {
       data.map((config: any) => {
@@ -37,7 +38,11 @@ function mooaWithConfig() {
           mooa.registerApplication(config.name, config, mooaRouter.matchRoute(config.prefix));
         }
 
-        mooa.rcStart(history.location);
+        mooa.rcStart(history);
+      });
+
+      history.listen(() => {
+        mooa.rcReRouter(history);
       });
     })
     .catch((err) => {
@@ -46,18 +51,12 @@ function mooaWithConfig() {
     ;
 }
 
-mooaWithConfig();
-
-history.listen((location: any) => {
-  console.log('rcReRouter', window['mooa']);
-  mooa.rcReRouter(location);
-});
+mooaWithConfig(history);
 
 render(
   <Router>
     <div>
       <Root history={history} />
-      <div id="app-home"></div>
     </div>
   </Router>,
   document.getElementById('root')

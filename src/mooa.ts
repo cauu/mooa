@@ -142,8 +142,9 @@ class Mooa {
     return this.reRouter()
   }
 
-  rcStart(location?: any) {
+  rcStart(history?: any) {
     this.started = true
+
     window.addEventListener(MOOA_EVENT.ROUTING_NAVIGATE, function(
       event: CustomEvent
     ) {
@@ -152,7 +153,7 @@ class Mooa {
       }
     })
 
-    return this.rcReRouter(location)
+    return this.rcReRouter(history)
   }
 
   /**
@@ -211,7 +212,8 @@ class Mooa {
     return performAppChanges()
   }
 
-  rcReRouter(location?: any) {
+  rcReRouter(history?: any) {
+    const location = history.location
     const that = this
 
     async function performAppChanges() {
@@ -254,10 +256,10 @@ class Mooa {
       }
 
       await Promise.all(loadThenMountPromises.concat(mountPromises))
-      if (location) {
+      if (history) {
         let activeApp = StatusHelper.getActiveApps(apps)[0]
         if (activeApp && activeApp['appConfig']) {
-          that.rcCreateRoutingChangeEvent(location, activeApp)
+          that.rcCreateRoutingChangeEvent(history, activeApp)
         }
       }
     }
@@ -265,9 +267,11 @@ class Mooa {
     return performAppChanges()
   }
 
-  rcCreateRoutingChangeEvent(location: any, activeApp: any) {
+  rcCreateRoutingChangeEvent(history: any, activeApp: any) {
+    const location = history.location
+
     let eventArgs = {
-      path: location.path,
+      path: location.pathname,
       app: activeApp['appConfig']
     }
 
@@ -279,10 +283,22 @@ class Mooa {
         iframeEl.contentWindow.dispatchEvent(
           new CustomEvent(MOOA_EVENT.ROUTING_CHANGE, { detail: eventArgs })
         )
+
+        window.addEventListener(MOOA_EVENT.CHILD_ROUTING, function(
+          event: CustomEvent
+        ) {
+          if (
+            event.detail &&
+            event.detail.pathname !== history.location.pathname
+          ) {
+            history.push(event.detail.pathname)
+          }
+        })
       }
-    } else {
-      customEvent(MOOA_EVENT.ROUTING_CHANGE, eventArgs)
     }
+    // } else {
+    //   customEvent(MOOA_EVENT.ROUTING_CHANGE, eventArgs)
+    // }
   }
 
   createRoutingChangeEvent(eventArguments: any, activeApp: any) {

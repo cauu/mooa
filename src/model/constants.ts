@@ -21,5 +21,6 @@ export enum MOOA_EVENT {
   ROUTING_CHANGE = 'mooa.routing.change',
   ROUTING_BEFORE = 'mooa.routing.before',
   CHILD_MOUNT = 'mooa.child.mount',
-  CHILD_UNMOUNT = 'mooa.child.unmount'
+  CHILD_UNMOUNT = 'mooa.child.unmount',
+  CHILD_ROUTING = 'mooa.child.routing.navigate'
 }

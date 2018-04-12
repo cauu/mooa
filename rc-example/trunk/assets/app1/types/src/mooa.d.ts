@@ -8,7 +8,7 @@ declare class Mooa {
     registerApplication(appName: string, appConfig?: any, activeWhen?: {}, customProps?: object): void;
     registerApplicationByLink(appName: string, link?: string, activeWhen?: {}, customProps?: object): void;
     start(): Promise<void>;
-    rcStart(location?: any): Promise<void>;
+    rcStart(history?: any): Promise<void>;
     /**
      * @desc
      * eventArguments is used for ng2
@@ -16,8 +16,8 @@ declare class Mooa {
      * 当history改变时，会调用rerouter方法，并通知platform执行navigate方法
      */
     reRouter(eventArguments?: any): Promise<void>;
-    rcReRouter(location?: any): Promise<void>;
-    rcCreateRoutingChangeEvent(location: any, activeApp: any): void;
+    rcReRouter(history?: any): Promise<void>;
+    rcCreateRoutingChangeEvent(history: any, activeApp: any): void;
     createRoutingChangeEvent(eventArguments: any, activeApp: any): void;
     private mergeAppConfigOption(appConfig);
     private checkActiveWhen(activeWhen);

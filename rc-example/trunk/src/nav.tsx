@@ -33,6 +33,11 @@ class Nav extends Component<NavProps, any> {
               首页
             </Link>
           </Menu.Item>
+          <Menu.Item key="app1_1">
+            <Link to="/app/app1/page1">
+              page1
+            </Link>
+          </Menu.Item>
         </SubMenu>
         <SubMenu key="app2" title={<span><Icon type="user" />本地应用</span>}>
           <Menu.Item key="app2_0">
@@ -41,6 +46,11 @@ class Nav extends Component<NavProps, any> {
             </Link>
           </Menu.Item>
         </SubMenu>
+        <MenuItem key="tarot">
+          <Link to="/app/tarot">
+            塔罗应用
+          </Link>
+        </MenuItem>
         <MenuItem key="app3">
           <Link to="/app/help">
             Angular应用

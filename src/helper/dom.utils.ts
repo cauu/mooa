@@ -1,4 +1,5 @@
 import { isString } from 'lodash'
+
 import { hashCode, navigateAppByName } from './app.helper'
 import { MooaApp } from '../model/IAppOption'
 import { MOOA_EVENT } from '../model/constants'
@@ -9,7 +10,14 @@ declare const document: Document
 
 export function createApplicationContainer(mooaApp: MooaApp) {
   const opts = mooaApp.appConfig
-  let el: any = document.querySelector(opts.selector)
+
+  let el: any
+  if (isString(opts.selector)) {
+    el = document.querySelector(opts.selector)
+  } else if (opts.selector.attributes && opts.selector.attributes.id) {
+    el = document.querySelector(opts.selector.attributes.id)
+  }
+
   if (mooaApp.switchMode === 'coexist') {
     if (el) {
       el.style.display = 'block'
@@ -36,7 +44,14 @@ export function createApplicationContainer(mooaApp: MooaApp) {
 
 export function removeApplicationContainer(app: MooaApp) {
   const opts = app.appConfig
-  let el: any = document.querySelector(opts.selector)
+
+  let el: any
+  if (isString(opts.selector)) {
+    el = document.querySelector(opts.selector)
+  } else if (opts.selector.attributes && opts.selector.attributes.id) {
+    el = document.querySelector(opts.selector.attributes.id)
+  }
+
   if (!el) {
     return
   }
