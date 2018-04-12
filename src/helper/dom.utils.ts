@@ -1,4 +1,4 @@
-import { isString } from 'lodash'
+import isString from 'lodash/isString'
 
 import { hashCode, navigateAppByName } from './app.helper'
 import { MooaApp } from '../model/IAppOption'

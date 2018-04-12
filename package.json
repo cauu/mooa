@@ -80,6 +80,7 @@
     "collectCoverage": true
   },
   "dependencies": {
+    "@types/lodash": "^4.14.106",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.15.0",
     "lodash": "^4.17.5",
