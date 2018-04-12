@@ -15,7 +15,7 @@ export function createApplicationContainer(mooaApp: MooaApp) {
   if (isString(opts.selector)) {
     el = document.querySelector(opts.selector)
   } else if (opts.selector.attributes && opts.selector.attributes.id) {
-    el = document.querySelector(opts.selector.attributes.id)
+    el = document.querySelector(`#${opts.selector.attributes.id}`)
   }
 
   if (mooaApp.switchMode === 'coexist') {
@@ -49,7 +49,7 @@ export function removeApplicationContainer(app: MooaApp) {
   if (isString(opts.selector)) {
     el = document.querySelector(opts.selector)
   } else if (opts.selector.attributes && opts.selector.attributes.id) {
-    el = document.querySelector(opts.selector.attributes.id)
+    el = document.querySelector(`#${opts.selector.attributes.id}`)
   }
 
   if (!el) {

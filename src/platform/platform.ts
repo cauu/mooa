@@ -67,8 +67,6 @@ export class MooaPlatform {
     if (this.isSingleSpaApp()) {
       location = location || window.location
       const pathNames = location.pathname.split('/')
-      console.log(location)
-      console.log(`Is SPA, path is ${pathNames}`)
       if (pathNames.length < 2) {
         return '/'
       }
