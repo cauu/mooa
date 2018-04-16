@@ -5,6 +5,7 @@ export default function generate(program: any) {
   let urlListFilePath = program.args[0]
 
   let filePath = process.cwd() + '/' + urlListFilePath
+  console.log('file path is', filePath)
   if (fs.existsSync(filePath)) {
     let urlFile = fs.readFileSync(filePath, 'utf8')
     let urls = urlFile.split(/\r?\n/)

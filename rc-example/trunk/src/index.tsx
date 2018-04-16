@@ -19,7 +19,7 @@ declare const window: any;
 const history = createHashHistory();
 
 const mooa = new Mooa({
-  // mode: 'iframe',
+  mode: 'iframe',
   debug: true,
   parentElement: '#app-home',
   urlPrefix: 'app',

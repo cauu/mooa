@@ -1,5 +1,5 @@
 {
-  "name": "mooa",
+  "name": "rc-mooa",
   "version": "0.1.1",
   "description": "",
   "keywords": [],
@@ -10,7 +10,7 @@
   "files": [
     "dist"
   ],
-  "author": "Phodal HUANG <h@phodal.com>",
+  "author": "Martin CAI<cauu@163.com>",
   "repository": {
     "type": "git",
     "url": ""

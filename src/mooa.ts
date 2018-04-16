@@ -92,7 +92,7 @@ class Mooa {
       name: appName,
       scripts: [],
       selector: `app-${appName}`,
-      baseScriptUrl: link,
+      // baseScriptUrl: link,
       styles: [],
       parentElement: '',
       prefix: '',
@@ -242,7 +242,7 @@ class Mooa {
       })
 
       const mountPromises = StatusHelper.getAppsToMount(apps, location)
-        .filter((appToMount: any) => appsToLoad.indexOf(appToMount) < 0)
+        // .filter((appToMount: any) => appsToLoad.indexOf(appToMount) < 0)
         .map(async function(appToMount: any) {
           await toBootstrapPromise(appToMount)
           await unmountAllPromise

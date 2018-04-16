@@ -29,12 +29,10 @@ export class MooaRouter {
       this.defaultRoute = prefix
     }
     return (location: Location): boolean => {
-      console.log('match route', location)
       if (prefix === '/') {
         return location.pathname === '/'
       }
       const route = find(this.routes, (r: any) => this.pathMatch(location, r))
-      console.log('match route', this.routes, route)
       if (route) {
         return this.pathMatch(location, prefix)
       } else {

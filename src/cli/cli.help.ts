@@ -32,7 +32,7 @@ function buildLink($link: any) {
 }
 
 function getAppName(appUrl: string) {
-  const myURL = new NODEURL.URL(appUrl)
+  const myURL = new NODEURL.Url(appUrl)
   let pathName = myURL.pathname
   let urlResources = pathName.split('/')
   let lastPath = urlResources[urlResources.length - 1]
@@ -40,11 +40,16 @@ function getAppName(appUrl: string) {
 }
 
 function getSelector($body: any) {
-  let selector: string = ''
+  let selector: any
   if ($body.length > 0) {
-    selector = $body.children()['0'].name
+    let root = $body.children()['0']
+
+    selector = {
+      tagName: root.name,
+      attributes: root.attribs
+    }
   }
-  return selector
+  return selector || ''
 }
 
 export async function generateAppConfigByUrl(appUrl: string) {
@@ -59,14 +64,15 @@ export async function generateAppConfigByUrl(appUrl: string) {
       let scripts: string[] = buildScripts($('script'))
       let styles: string[] = buildLink($('link'))
       let selector: string = getSelector($('body'))
-      let { pathName, lastPath } = getAppName(appUrl)
+      let appName = $("meta[name='mooaAppName']").attr('content')
+      // let { pathName, lastPath } = getAppName(appUrl)
 
       let app = {
-        name: lastPath,
+        name: appName,
         selector: selector,
-        baseScriptUrl: pathName,
+        // baseScriptUrl: pathName,
         styles: styles,
-        prefix: lastPath,
+        prefix: appName,
         scripts: scripts
       }
 
