@@ -14,16 +14,6 @@ export class MooaPlatform {
     this.name = name
     this.history = history
 
-    // const nameMeta = createElement({
-    //   tagName: 'meta',
-    //   attributes: {
-    //     name: 'mooaAppName',
-    //     content: name
-    //   }
-    // })
-
-    // document.head.appendChild(nameMeta)
-
     return new Promise((resolve, reject) => {
       if (this.isSingleSpaApp()) {
         history.listen((location: any) => {

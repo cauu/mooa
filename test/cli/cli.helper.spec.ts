@@ -1,9 +1,13 @@
+jest.mock('request')
+
 import { getAppsConfig } from '../../src/cli/cli.help'
 
 test('should be able to generate app config file', async () => {
-  let urls = ['http://localhost:8081/#/']
+  require('request').__setMockPage('app1', 'app1-root', 'main.js', 'style.css')
 
-  const configs = await getAppsConfig(urls)
+  const configs = await getAppsConfig(['test'])
+
+  jest.unmock('request')
 
   expect(configs).toMatchObject([
     {
@@ -14,8 +18,7 @@ test('should be able to generate app config file', async () => {
       selector: {
         tagName: 'div',
         attributes: {
-          id: 'app1-root',
-          class: 'test'
+          id: 'app1-root'
         }
       }
     }
