@@ -12,7 +12,7 @@ const __setMockPage = (
     <html>
       <head>
         <meta name="mooaAppName" content="${name}" />
-        <link href="${styles}">
+        <link rel="stylesheet" href="${styles}">
       </head>
       <body>
         <div id="${id}" />

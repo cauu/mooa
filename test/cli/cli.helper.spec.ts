@@ -14,7 +14,7 @@ test('should be able to generate app config file', async () => {
       name: 'app1',
       prefix: 'app1',
       scripts: ['main.js'],
-      styles: [],
+      styles: ['style.css'],
       selector: {
         tagName: 'div',
         attributes: {
