@@ -12,7 +12,10 @@ program
   .version(version)
   .option('-c, --create [type]', 'Create [type] host || app')
   .option('-u, --update [host]', 'Update [type] host || app')
-  .option('-g, --generate', 'Generate Mooa App Config')
+  .option(
+    '-g, --generate',
+    'Generate Mooa App Config by given a list of targeting project urls'
+  )
   .parse(process.argv)
 
 if (program.create) {

@@ -1,3 +1,5 @@
+jest.unmock('request')
+
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 const { window, document } = new JSDOM()

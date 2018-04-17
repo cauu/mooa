@@ -1,12 +1,8 @@
 # Mooa
 
-[![Build Status](https://travis-ci.org/phodal/mooa.svg?branch=master)](https://travis-ci.org/phodal/mooa)
-[![Coverage Status](https://coveralls.io/repos/github/phodal/mooa/badge.svg?branch=master)](https://coveralls.io/github/phodal/mooa?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/99132c580e1d74690def/maintainability)](https://codeclimate.com/github/phodal/mooa/maintainability)
-[![node](https://img.shields.io/node/v/mooa.svg)](https://www.npmjs.com/package/mooa) 
-[![npm](https://img.shields.io/npm/v/mooa.svg)](https://www.npmjs.com/mooa)
+> Origin Mooa is a single SPA Utils for Angular 2+ made by Phodal Huang.
 
-> A single SPA Utils for Angular 2+
+> This is a fork for react SPA.
 
 based on [single-spa](https://github.com/CanopyTax/single-spa) && [single-spa-angular-cli](https://github.com/PlaceMe-SAS/single-spa-angular-cli)
 
@@ -15,6 +11,12 @@ difference:
  - Host <-> Apps Architecture
  - Configurable App (no loader require)
  - Independent App in Different Repo and runnable
+
+[![Build Status](https://travis-ci.org/phodal/mooa.svg?branch=master)](https://travis-ci.org/phodal/mooa)
+[![Coverage Status](https://coveralls.io/repos/github/phodal/mooa/badge.svg?branch=master)](https://coveralls.io/github/phodal/mooa?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/99132c580e1d74690def/maintainability)](https://codeclimate.com/github/phodal/mooa/maintainability)
+[![node](https://img.shields.io/node/v/mooa.svg)](https://www.npmjs.com/package/mooa) 
+[![npm](https://img.shields.io/npm/v/mooa.svg)](https://www.npmjs.com/mooa)
 
 ![Mooa Architecture](docs/mooa.png)
 

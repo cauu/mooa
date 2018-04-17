@@ -1,3 +1,5 @@
+jest.unmock('request')
+
 import MooaPlatform from '../../src/platform/platform'
 import { MOOA_EVENT } from '../../src/model/constants'
 const jsdom = require('jsdom')

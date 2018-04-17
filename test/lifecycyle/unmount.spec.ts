@@ -1,3 +1,5 @@
+jest.unmock('request')
+
 import { addAppToUnload } from '../../src/lifecycles/unload'
 import { StatusEnum } from '../../src/model/constants'
 import { ensureValidAppTimeouts } from '../../src/helper/timeouts'

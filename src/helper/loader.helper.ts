@@ -84,7 +84,7 @@ function loadAllAssetsForIframe(opts: any) {
 
     const stylesPromise = opts.styles.reduce(
       (prev: Promise<undefined>, fileName: string) =>
-        prev.then(loadLinkTag(`${opts.baseScriptUrl}/${fileName}`)),
+        prev.then(loadLinkTag(`${opts.baseScriptUrl}/${fileName}`, iframeEl)),
       Promise.resolve(undefined)
     )
 
@@ -119,7 +119,7 @@ function loadAllAssetsForIframeAndUrl(opts: any) {
 
       const stylesPromise = opts.styles.reduce(
         (prev: Promise<undefined>, fileName: string) =>
-          prev.then(loadLinkTag(`${opts.baseScriptUrl}/${fileName}`)),
+          prev.then(loadLinkTag(`${opts.baseScriptUrl}/${fileName}`, iframeEl)),
         Promise.resolve(undefined)
       )
 

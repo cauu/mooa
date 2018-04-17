@@ -1,3 +1,5 @@
+jest.unmock('request')
+
 import {
   createApplicationIframeContainer,
   generateIFrameID,

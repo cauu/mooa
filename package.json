@@ -1,5 +1,5 @@
 {
-  "name": "mooa",
+  "name": "rc-mooa",
   "version": "0.1.1",
   "description": "",
   "keywords": [],
@@ -10,7 +10,7 @@
   "files": [
     "dist"
   ],
-  "author": "Phodal HUANG <h@phodal.com>",
+  "author": "Martin CAI<cauu@163.com>",
   "repository": {
     "type": "git",
     "url": ""
@@ -80,8 +80,10 @@
     "collectCoverage": true
   },
   "dependencies": {
+    "@types/lodash": "^4.14.106",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.15.0",
+    "lodash": "^4.17.5",
     "request": "^2.85.0"
   },
   "devDependencies": {

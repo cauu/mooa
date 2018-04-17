@@ -1,5 +1,6 @@
 import { customEvent } from '../helper/app.helper'
 import { MOOA_EVENT } from '../model/constants'
+import { mooaLog } from '../helper/app.helper'
 
 declare const window: any
 window.mooa = window.mooa || {}
@@ -7,6 +8,30 @@ window.mooa = window.mooa || {}
 export class MooaPlatform {
   name: string = ''
   router: any
+  history: any
+
+  rcMount(name: string, history?: any) {
+    this.name = name
+    this.history = history
+
+    return new Promise((resolve, reject) => {
+      if (this.isSingleSpaApp()) {
+        history.listen((location: any) => {
+          this.notifyParent(location)
+        })
+
+        this.rcHandleRouterUpdate(history, name)
+
+        customEvent(MOOA_EVENT.CHILD_MOUNT, { name: this.name })
+        window.mooa[this.name] = window.mooa[this.name] || {}
+        window.mooa[this.name].mount = (props: any) => {
+          resolve({ props, attachUnmount: this.unmount.bind(this) })
+        }
+      } else {
+        resolve({ props: {}, attachUnmount: this.unmount.bind(this) })
+      }
+    })
+  }
 
   mount(name: string, router?: any) {
     this.name = name
@@ -38,9 +63,10 @@ export class MooaPlatform {
     }
   }
 
-  appBase(): string {
+  appBase(location?: any): string {
     if (this.isSingleSpaApp()) {
-      const pathNames = window.location.pathname.split('/')
+      location = location || window.location
+      const pathNames = location.pathname.split('/')
       if (pathNames.length < 2) {
         return '/'
       }
@@ -56,6 +82,30 @@ export class MooaPlatform {
 
   navigateTo(opts: any) {
     customEvent(MOOA_EVENT.ROUTING_NAVIGATE, opts)
+  }
+
+  notifyParent(location?: any) {
+    if (this.isSingleSpaApp()) {
+      if (window.parent) {
+        window.parent.dispatchEvent(
+          new CustomEvent(MOOA_EVENT.CHILD_ROUTING, { detail: location })
+        )
+      }
+    }
+  }
+
+  rcHandleRouterUpdate(history: any, appName: string) {
+    window.addEventListener(MOOA_EVENT.ROUTING_CHANGE, (event: CustomEvent) => {
+      if (event.detail.app.name === appName) {
+        // let urlPrefix = 'app/'
+        // if (urlPrefix) {
+        //   urlPrefix = `/${window.mooa.option.urlPrefix}/`
+        // }
+        // console.log(event.detail.path.replace(urlPrefix + appName, ''))
+        history.push(event.detail.path)
+        // history.push(event.detail.path.replace(urlPrefix + appName, ''))
+      }
+    })
   }
 
   handleRouterUpdate(router: any, appName: string) {
