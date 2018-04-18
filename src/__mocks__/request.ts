@@ -1,6 +1,12 @@
 let request = jest.genMockFromModule('request')
 
-let __mockHTML = ''
+let __mockHTML: string = ''
+
+let mockRequest: any = {}
+
+// declare let __mockHTML: any
+
+// declare let mockRequest: any
 
 const __setMockPage = (
   name: string,
@@ -22,7 +28,7 @@ const __setMockPage = (
   `
 }
 
-function mockRequest(url, callback) {
+mockRequest = function(url: string, callback: any) {
   setTimeout(() => {
     callback(null, null, __mockHTML)
   }, 500)

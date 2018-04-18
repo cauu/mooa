@@ -17,6 +17,8 @@ import Root from './root';
 
 const history = createHashHistory();
 
+console.log(history, history.location);
+
 mooaPlatform.rcMount('app1', history).then((...params: Array<any>) => {
   render(
     <Router basename={mooaPlatform.appBase(history.location)}>

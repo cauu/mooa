@@ -11,7 +11,8 @@ import { MooaPlatform } from './platform/platform'
 import {
   customEvent,
   navigateAppByName,
-  rcNavigateAppByName
+  rcNavigateAppByName,
+  getHistoryLocation
 } from './helper/app.helper'
 import { generateIFrameID } from './helper/dom.utils'
 
@@ -213,7 +214,7 @@ class Mooa {
   }
 
   rcReRouter(history?: any) {
-    const location = history.location
+    const location = getHistoryLocation(history)
     const that = this
 
     async function performAppChanges() {
@@ -268,7 +269,7 @@ class Mooa {
   }
 
   rcCreateRoutingChangeEvent(history: any, activeApp: any) {
-    const location = history.location
+    const location = getHistoryLocation(history)
 
     let eventArgs = {
       path: location.pathname,
@@ -287,10 +288,9 @@ class Mooa {
         window.addEventListener(MOOA_EVENT.CHILD_ROUTING, function(
           event: CustomEvent
         ) {
-          if (
-            event.detail &&
-            event.detail.pathname !== history.location.pathname
-          ) {
+          const location = getHistoryLocation(history)
+
+          if (event.detail && event.detail.pathname !== location.pathname) {
             history.push(event.detail.pathname)
           }
         })

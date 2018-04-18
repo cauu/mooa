@@ -17,6 +17,7 @@ export async function toBootstrapPromise(app: any) {
       `Bootstrapping app '${app.name}'`,
       app.timeouts.bootstrap
     )
+    console.log('bootstrap success')
     app.status = StatusEnum.NOT_MOUNTED
   } catch (err) {
     console.error(err)

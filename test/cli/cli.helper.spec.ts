@@ -7,8 +7,6 @@ test('should be able to generate app config file', async () => {
 
   const configs = await getAppsConfig(['test'])
 
-  jest.unmock('request')
-
   expect(configs).toMatchObject([
     {
       name: 'app1',

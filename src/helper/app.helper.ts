@@ -85,3 +85,10 @@ export function hashCode(str: string) {
 
   return hash.toString()
 }
+
+export function getHistoryLocation(history: any): any {
+  return (
+    history.location ||
+    (history.getCurrentLocation && history.getCurrentLocation())
+  )
+}
