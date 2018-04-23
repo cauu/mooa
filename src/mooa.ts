@@ -16,6 +16,9 @@ import {
 } from './helper/app.helper'
 import { generateIFrameID } from './helper/dom.utils'
 
+export { default as MooaProvider } from './component/provider'
+export { default as MooaAppContainer } from './component/app-container'
+
 declare const window: any
 
 const apps: any[] = []

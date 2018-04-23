@@ -7,9 +7,13 @@ import {
   Layout,
 } from 'antd';
 
+import MooaAppContainer from './app-container';
 import Nav from './nav';
+import SubPage from './subpage';
 
 const { Header, Content, Sider, Footer } = Layout;
+
+const MooaContent = MooaAppContainer(SubPage);
 
 export type RootProps = {
   history?: any;
@@ -36,7 +40,7 @@ class Root extends Component<RootProps, RootStates> {
             <Sider width={200} style={{ height: '70vh', background: '#fff' }}>
               <Nav />
             </Sider>
-            <Content id="app-home"
+            <Content
               style={{
                 background: '#fff',
                 padding: '0 24px',
@@ -44,8 +48,8 @@ class Root extends Component<RootProps, RootStates> {
                 height: '70vh'
               }}
             >
-              <Route exact path="/" render={() => <div>test</div>} />
-              <Route path="/app2" render={() => <div>app2 content</div>} />
+              <Route path="/app*" render={() => <MooaContent id="app-home" />} />
+              <Route path="/fuck" render={() => <div>app2 content</div>} />
             </Content>
           </Layout>
         </Content>

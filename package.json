@@ -80,10 +80,16 @@
     "collectCoverage": true
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.106",
+    "@types/prop-types": "^15.5.2",
+    "@types/react": "^16.3.12",
+    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.15.0",
     "lodash": "^4.17.5",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
     "request": "^2.85.0"
   },
   "devDependencies": {

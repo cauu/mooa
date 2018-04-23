@@ -41,7 +41,7 @@ class Nav extends Component<NavProps, any> {
         </SubMenu>
         <SubMenu key="app2" title={<span><Icon type="user" />本地应用</span>}>
           <Menu.Item key="app2_0">
-            <Link to="/app2">
+            <Link to="/fuck">
               首页
             </Link>
           </Menu.Item>
