@@ -113,6 +113,7 @@ function unmount(app: MooaApp, props: any) {
     if (app.mode === 'iframe') {
       unloadApplication(app.name, { waitForUnmount: true })
       removeApplicationIframeContainer(app)
+      debugger
       resolve()
     }
 

@@ -28,9 +28,11 @@ export default class MooaProvider extends Component<
   private configs: Array<Object> = []
   private mounted: boolean = false
   private listeners: Array<Function> = []
+  private unlisten: Function = () => {}
 
   static childContextTypes = {
     mooa: PropsTypes.any,
+    mooaMounted: PropsTypes.func,
     mooaRouter: PropsTypes.any,
     mooaHistory: PropsTypes.any,
     addMooaListener: PropsTypes.func
@@ -41,6 +43,7 @@ export default class MooaProvider extends Component<
       mooa: this.mooa,
       mooaRouter: this.router,
       mooaHistory: this.history,
+      mooaMounted: () => this.mounted,
       addMooaListener: this.addMooaListener
     }
   }
@@ -84,10 +87,17 @@ export default class MooaProvider extends Component<
 
   componentWillMount() {
     this.initConfig(this.props.configUrl)
+
+    this.unlisten = this.history.listen(() => {
+      debugger
+      this.mooa.rcReRouter(this.history)
+    })
   }
 
   componentWillUnmount() {
     this.mounted = false
+
+    this.unlisten()
   }
 
   render() {

@@ -82,6 +82,7 @@ class Mooa {
 
     apps.push(appOpt)
     window.apps = apps
+    window.originApps = apps
   }
 
   registerApplicationByLink(
@@ -231,6 +232,8 @@ class Mooa {
         .map(toUnmountPromise)
         .map((unmountPromise: any) => unmountPromise.then(toUnloadPromise))
 
+      console.log(apps)
+
       const allUnmountPromises = unmountUnloadPromises.concat(unloadPromises)
 
       const unmountAllPromise = Promise.all(allUnmountPromises)
@@ -270,6 +273,8 @@ class Mooa {
 
     return performAppChanges()
   }
+
+  reRender() {}
 
   rcCreateRoutingChangeEvent(history: any, activeApp: any) {
     const location = getHistoryLocation(history)

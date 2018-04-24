@@ -15,7 +15,7 @@ export default (WrappedComponent: any): any => {
       mooa: PropsTypes.any,
       mooaRouter: PropsTypes.any,
       mooaHistory: PropsTypes.any,
-      mooaMounted: PropsTypes.bool,
+      mooaMounted: PropsTypes.func,
       addMooaListener: PropsTypes.func
     };
 
@@ -26,24 +26,28 @@ export default (WrappedComponent: any): any => {
     }
 
     componentDidMount() {
-      const { addMooaListener, mooaMounted } = this.context;
+      const { addMooaListener, mooaMounted, mooaHistory } = this.context;
 
-      mooaMounted && this.mooa.rcStart(history);
+      mooaMounted && mooaMounted() && this.mooa.rcStart(mooaHistory);
+      debugger;
 
       addMooaListener && addMooaListener((history: any) => {
         /**
          * @desc mooa.rcStart需要在config文件成功注册之后执行
          */
         this.mooa.rcStart(history);
-
-        this.unlisten = history.listen(() => {
-          this.mooa.rcReRouter(history);
-        });
       });
     }
 
     componentWillUnmount() {
-      this.unlisten && this.unlisten();
+      /**
+       * @todo 如果节点执行unmount，那么会对节点上挂载的所有app执行unmount
+       */
+      const { mooaHistory } = this.context;
+
+      debugger;
+
+      this.mooa.rcStop(mooaHistory);
     }
 
     render() {
