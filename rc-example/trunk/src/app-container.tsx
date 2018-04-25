@@ -29,7 +29,6 @@ export default (WrappedComponent: any): any => {
       const { addMooaListener, mooaMounted, mooaHistory } = this.context;
 
       mooaMounted && mooaMounted() && this.mooa.rcStart(mooaHistory);
-      debugger;
 
       addMooaListener && addMooaListener((history: any) => {
         /**
@@ -42,12 +41,9 @@ export default (WrappedComponent: any): any => {
     componentWillUnmount() {
       /**
        * @todo 如果节点执行unmount，那么会对节点上挂载的所有app执行unmount
+       * 此处只需要修改节点状态，因为节点所在的容器会自动被销毁
        */
-      const { mooaHistory } = this.context;
-
-      debugger;
-
-      this.mooa.rcStop(mooaHistory);
+      this.mooa.unmount();
     }
 
     render() {

@@ -232,8 +232,6 @@ class Mooa {
         .map(toUnmountPromise)
         .map((unmountPromise: any) => unmountPromise.then(toUnloadPromise))
 
-      console.log(apps)
-
       const allUnmountPromises = unmountUnloadPromises.concat(unloadPromises)
 
       const unmountAllPromise = Promise.all(allUnmountPromises)
@@ -274,7 +272,14 @@ class Mooa {
     return performAppChanges()
   }
 
-  reRender() {}
+  unmount() {
+    for (let i = 0; i < apps.length; i++) {
+      apps[i] = {
+        ...apps[i],
+        status: 'NOT_LOADED'
+      }
+    }
+  }
 
   rcCreateRoutingChangeEvent(history: any, activeApp: any) {
     const location = getHistoryLocation(history)

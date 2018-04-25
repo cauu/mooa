@@ -36,8 +36,6 @@ export default (WrappedComponent: any): any => {
 
       mooaMounted && mooaMounted() && this.mooa.rcStart(mooaHistory);
 
-      debugger;
-
       addMooaListener && addMooaListener((history: any) => {
         /**
          * @desc mooa.rcStart需要在config文件成功注册之后执行
@@ -50,6 +48,7 @@ export default (WrappedComponent: any): any => {
       /**
        * unmount的时候，需要成功卸载掉之前加载的组件
        */
+      this.mooa.unmount();
     }
 
     render() {
