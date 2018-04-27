@@ -36,24 +36,6 @@ export function customEvent(eventName: any, eventArgs?: any) {
   window.dispatchEvent(new CustomEvent(eventName, { detail: eventArgs }))
 }
 
-export function rcNavigateAppByName(opts: any): void {
-  let navigateToApp: any
-  window.apps.map((app: any) => {
-    app.status = StatusEnum.MOUNTED
-    if (app.name === opts.appName) {
-      app.status = StatusEnum.NOT_LOADED
-      navigateToApp = app
-      return app
-    }
-  })
-
-  if (navigateToApp) {
-    let prefix = navigateToApp.appConfig.prefix
-    history.pushState(null, '', prefix + '/' + opts.router)
-    return window.mooa.instance.rcReRouter()
-  }
-}
-
 export function navigateAppByName(opts: any): void {
   let navigateToApp: any
   window.apps.map((app: any) => {
@@ -71,6 +53,24 @@ export function navigateAppByName(opts: any): void {
     return window.mooa.instance.reRouter()
   }
 }
+
+// export function navigateAppByName(opts: any): void {
+//   let navigateToApp: any
+//   window.apps.map((app: any) => {
+//     app.status = StatusEnum.MOUNTED
+//     if (app.name === opts.appName) {
+//       app.status = StatusEnum.NOT_LOADED
+//       navigateToApp = app
+//       return app
+//     }
+//   })
+
+//   if (navigateToApp) {
+//     let prefix = navigateToApp.appConfig.prefix
+//     history.pushState(null, '', prefix + '/' + opts.router)
+//     return window.mooa.instance.reRouter()
+//   }
+// }
 
 export function hashCode(str: string) {
   let hash = 0

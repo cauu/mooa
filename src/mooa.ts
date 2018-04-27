@@ -11,7 +11,6 @@ import { MooaPlatform } from './platform/platform'
 import {
   customEvent,
   navigateAppByName,
-  rcNavigateAppByName,
   getHistoryLocation
 } from './helper/app.helper'
 import { generateIFrameID } from './helper/dom.utils'
@@ -47,7 +46,7 @@ class Mooa {
     appName: string,
     appConfig?: any,
     activeWhen?: {},
-    customProps: object = {}
+    customProps: Object = {}
   ) {
     this.checkActiveWhen(activeWhen)
 
@@ -89,7 +88,7 @@ class Mooa {
     appName: string,
     link?: string,
     activeWhen?: {},
-    customProps: object = {}
+    customProps: Object = {}
   ) {
     this.checkActiveWhen(activeWhen)
 
@@ -134,8 +133,9 @@ class Mooa {
     window.apps = apps
   }
 
-  start() {
+  start(history?: any) {
     this.started = true
+
     window.addEventListener(MOOA_EVENT.ROUTING_NAVIGATE, function(
       event: CustomEvent
     ) {
@@ -144,80 +144,10 @@ class Mooa {
       }
     })
 
-    return this.reRouter()
+    return this.reRouter(history)
   }
 
-  rcStart(history?: any) {
-    this.started = true
-
-    window.addEventListener(MOOA_EVENT.ROUTING_NAVIGATE, function(
-      event: CustomEvent
-    ) {
-      if (event.detail) {
-        rcNavigateAppByName(event.detail)
-      }
-    })
-
-    return this.rcReRouter(history)
-  }
-
-  /**
-   * @desc
-   * eventArguments is used for ng2
-   * 在react中，监听的不是router event，而是history的改变,
-   * 当history改变时，会调用rerouter方法，并通知platform执行navigate方法
-   */
-  reRouter(eventArguments?: any) {
-    const that = this
-    async function performAppChanges() {
-      customEvent(MOOA_EVENT.ROUTING_BEFORE)
-      const unloadPromises = StatusHelper.getAppsToUnload().map(toUnloadPromise)
-
-      const unmountUnloadPromises = StatusHelper.getAppsToUnmount(apps)
-        .map(toUnmountPromise)
-        .map((unmountPromise: any) => unmountPromise.then(toUnloadPromise))
-
-      const allUnmountPromises = unmountUnloadPromises.concat(unloadPromises)
-
-      const unmountAllPromise = Promise.all(allUnmountPromises)
-
-      const appsToLoad = StatusHelper.getAppsToLoad(apps)
-      const loadThenMountPromises = appsToLoad.map((app: any) => {
-        return toLoadPromise(app)
-          .then(toBootstrapPromise)
-          .then(async function(toMountApp) {
-            await unmountAllPromise
-            return toMountPromise(toMountApp)
-          })
-      })
-
-      const mountPromises = StatusHelper.getAppsToMount(apps)
-        .filter((appToMount: any) => appsToLoad.indexOf(appToMount) < 0)
-        .map(async function(appToMount: any) {
-          await toBootstrapPromise(appToMount)
-          await unmountAllPromise
-          return toMountPromise(appToMount)
-        })
-
-      try {
-        await unmountAllPromise
-      } catch (err) {
-        throw err
-      }
-
-      await Promise.all(loadThenMountPromises.concat(mountPromises))
-      if (eventArguments) {
-        let activeApp = StatusHelper.getActiveApps(apps)[0]
-        if (activeApp && activeApp['appConfig']) {
-          that.createRoutingChangeEvent(eventArguments, activeApp)
-        }
-      }
-    }
-
-    return performAppChanges()
-  }
-
-  rcReRouter(history?: any) {
+  reRouter(history?: any) {
     const location = getHistoryLocation(history)
     const that = this
 
@@ -264,7 +194,7 @@ class Mooa {
       if (history) {
         let activeApp = StatusHelper.getActiveApps(apps)[0]
         if (activeApp && activeApp['appConfig']) {
-          that.rcCreateRoutingChangeEvent(history, activeApp)
+          that.createRoutingChangeEvent(history, activeApp)
         }
       }
     }
@@ -281,7 +211,7 @@ class Mooa {
     }
   }
 
-  rcCreateRoutingChangeEvent(history: any, activeApp: any) {
+  createRoutingChangeEvent(history: any, activeApp: any) {
     const location = getHistoryLocation(history)
 
     let eventArgs = {
@@ -312,26 +242,6 @@ class Mooa {
     // } else {
     //   customEvent(MOOA_EVENT.ROUTING_CHANGE, eventArgs)
     // }
-  }
-
-  createRoutingChangeEvent(eventArguments: any, activeApp: any) {
-    let eventArgs = {
-      url: eventArguments.url,
-      app: activeApp['appConfig']
-    }
-
-    if (activeApp.mode === 'iframe') {
-      const iframeId = generateIFrameID(activeApp.name)
-      let iframeEl: any = document.getElementById(iframeId)
-      if (iframeEl && iframeEl.contentWindow) {
-        iframeEl.contentWindow.mooa.option = window.mooa.option
-        iframeEl.contentWindow.dispatchEvent(
-          new CustomEvent(MOOA_EVENT.ROUTING_CHANGE, { detail: eventArgs })
-        )
-      }
-    } else {
-      customEvent(MOOA_EVENT.ROUTING_CHANGE, eventArgs)
-    }
   }
 
   private mergeAppConfigOption(appConfig: any) {

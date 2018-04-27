@@ -12,7 +12,7 @@ import { MOOA_EVENT } from '../../../src/model/constants';
 
 import Root from './root';
 
-import Provider from './mooa-provider';
+import Provider from '../../../src/component/provider';
 
 import './styles/app.scss';
 

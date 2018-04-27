@@ -89,7 +89,7 @@ export default class MooaProvider extends Component<
     this.initConfig(this.props.configUrl)
 
     this.unlisten = this.history.listen(() => {
-      this.mooa.rcReRouter(this.history)
+      this.mooa.reRouter(this.history)
     })
   }
 

@@ -34,13 +34,13 @@ export default (WrappedComponent: any): any => {
     componentDidMount() {
       const { addMooaListener, mooaMounted, mooaHistory } = this.context;
 
-      mooaMounted && mooaMounted() && this.mooa.rcStart(mooaHistory);
+      mooaMounted && mooaMounted() && this.mooa.start(mooaHistory);
 
       addMooaListener && addMooaListener((history: any) => {
         /**
          * @desc mooa.rcStart需要在config文件成功注册之后执行
          */
-        this.mooa.rcStart(history);
+        this.mooa.start(history);
       });
     }
 

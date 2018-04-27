@@ -7,7 +7,7 @@ import {
   Layout,
 } from 'antd';
 
-import MooaAppContainer from './app-container';
+import MooaAppContainer from '../../../src/component/app-container';
 import Nav from './nav';
 import SubPage from './subpage';
 
