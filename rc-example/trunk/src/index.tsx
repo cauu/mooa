@@ -30,31 +30,6 @@ const mooa = new Mooa({
   includeZone: true
 });
 
-// function mooaWithConfig(history: any) {
-//   axios.get('/assets/apps.json')
-//     .then(({ data }) => {
-//       data.map((config: any) => {
-//         if (config.sourceType) {
-//           mooa.registerApplicationByLink(config.name, config.link, mooaRouter.matchRoute(config.name));
-//         } else {
-//           mooa.registerApplication(config.name, config, mooaRouter.matchRoute(config.prefix));
-//         }
-
-//         mooa.rcStart(history);
-//       });
-
-//       history.listen(() => {
-//         mooa.rcReRouter(history);
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     })
-//     ;
-// }
-
-// mooaWithConfig(history);
-
 render(
   <Provider
     mooa={mooa}
