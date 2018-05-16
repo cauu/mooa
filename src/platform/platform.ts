@@ -10,7 +10,7 @@ export class MooaPlatform {
   router: any
   history: any
 
-  rcMount(name: string, history?: any) {
+  mount(name: string, history?: any) {
     this.name = name
     this.history = history
 
@@ -20,7 +20,7 @@ export class MooaPlatform {
           this.notifyParent(location)
         })
 
-        this.rcHandleRouterUpdate(history, name)
+        this.handleRouterUpdate(history, name)
 
         customEvent(MOOA_EVENT.CHILD_MOUNT, { name: this.name })
         window.mooa[this.name] = window.mooa[this.name] || {}
@@ -33,21 +33,21 @@ export class MooaPlatform {
     })
   }
 
-  mount(name: string, router?: any) {
-    this.name = name
-    this.router = router
-    return new Promise((resolve, reject) => {
-      if (this.isSingleSpaApp()) {
-        customEvent(MOOA_EVENT.CHILD_MOUNT, { name: this.name })
-        window.mooa[this.name] = window.mooa[this.name] || {}
-        window.mooa[this.name].mount = (props: any) => {
-          resolve({ props, attachUnmount: this.unmount.bind(this) })
-        }
-      } else {
-        resolve({ props: {}, attachUnmount: this.unmount.bind(this) })
-      }
-    })
-  }
+  // mount(name: string, router?: any) {
+  //   this.name = name
+  //   this.router = router
+  //   return new Promise((resolve, reject) => {
+  //     if (this.isSingleSpaApp()) {
+  //       customEvent(MOOA_EVENT.CHILD_MOUNT, { name: this.name })
+  //       window.mooa[this.name] = window.mooa[this.name] || {}
+  //       window.mooa[this.name].mount = (props: any) => {
+  //         resolve({ props, attachUnmount: this.unmount.bind(this) })
+  //       }
+  //     } else {
+  //       resolve({ props: {}, attachUnmount: this.unmount.bind(this) })
+  //     }
+  //   })
+  // }
 
   unmount(module: any) {
     if (this.isSingleSpaApp()) {
@@ -63,15 +63,23 @@ export class MooaPlatform {
     }
   }
 
+  /**
+   * @deprecated 参数location被废弃
+   */
   appBase(location?: any): string {
     if (this.isSingleSpaApp()) {
-      location = location || window.location
-      const pathNames = location.pathname.split('/')
-      if (pathNames.length < 2) {
+      const parentWindow = window.parent || {}
+      const mooaItem = parentWindow.mooa || {}
+      const parentRouter = (mooaItem.option || {}).urlPrefix
+      const appName = this.name
+      // location = location || window.location
+      // const pathNames = location.pathname.split('/')
+      if (!parentRouter || !appName) {
+        // if (pathNames.length < 2) {
         return '/'
       }
-      const parentRouter = pathNames[1]
-      const appName = pathNames[2]
+      // const parentRouter = pathNames[1]
+      // const appName = pathNames[2]
       const locationPath = '/' + parentRouter + '/' + appName
       window.mooa.basePath = locationPath
       return locationPath
@@ -94,31 +102,25 @@ export class MooaPlatform {
     }
   }
 
-  rcHandleRouterUpdate(history: any, appName: string) {
+  handleRouterUpdate(history: any, appName: string) {
     window.addEventListener(MOOA_EVENT.ROUTING_CHANGE, (event: CustomEvent) => {
       if (event.detail.app.name === appName) {
-        // let urlPrefix = 'app/'
-        // if (urlPrefix) {
-        //   urlPrefix = `/${window.mooa.option.urlPrefix}/`
-        // }
-        // console.log(event.detail.path.replace(urlPrefix + appName, ''))
         history.push(event.detail.path)
-        // history.push(event.detail.path.replace(urlPrefix + appName, ''))
       }
     })
   }
 
-  handleRouterUpdate(router: any, appName: string) {
-    window.addEventListener(MOOA_EVENT.ROUTING_CHANGE, (event: CustomEvent) => {
-      if (event.detail.app.name === appName) {
-        let urlPrefix = 'app'
-        if (urlPrefix) {
-          urlPrefix = `/${window.mooa.option.urlPrefix}/`
-        }
-        router.navigate([event.detail.url.replace(urlPrefix + appName, '')])
-      }
-    })
-  }
+  // handleRouterUpdate(router: any, appName: string) {
+  //   window.addEventListener(MOOA_EVENT.ROUTING_CHANGE, (event: CustomEvent) => {
+  //     if (event.detail.app.name === appName) {
+  //       let urlPrefix = 'app'
+  //       if (urlPrefix) {
+  //         urlPrefix = `/${window.mooa.option.urlPrefix}/`
+  //       }
+  //       router.navigate([event.detail.url.replace(urlPrefix + appName, '')])
+  //     }
+  //   })
+  // }
 
   private isSingleSpaApp(): boolean {
     return window.mooa.isSingleSpa

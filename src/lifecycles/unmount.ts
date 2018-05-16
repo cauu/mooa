@@ -87,7 +87,6 @@ export async function toUnmountPromise(app: any) {
     app.status = StatusEnum.NOT_MOUNTED
   } catch (err) {
     console.error(err)
-    debugger
     app.status = StatusEnum.SKIP_BECAUSE_BROKEN
     throw new Error(err)
   }
